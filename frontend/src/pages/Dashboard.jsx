@@ -11,6 +11,8 @@ const funFacts = [
   "Expand your mind in the Knowledge Vault!",
 ];
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE || "http://localhost:5000";
+
 export default function Dashboard() {
   const navigate = useNavigate();
   const [userName, setUserName] = useState("");
@@ -21,7 +23,7 @@ export default function Dashboard() {
     if (!token) navigate("/login");
     else {
       axios
-        .get("http://localhost:5000/api/auth/me", {
+        .get(`${API_BASE_URL}/api/auth/me`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => setUserName(res.data.name))

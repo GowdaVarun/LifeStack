@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE || "http://localhost:5000";
+
 export default function FinanceManager() {
   const navigate = useNavigate();
   const [transactions, setTransactions] = useState([]);
@@ -19,7 +21,7 @@ export default function FinanceManager() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:5000/api/auth/me", {
+      .get(`${API_BASE_URL}/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setUserName(res.data.name))
@@ -29,7 +31,7 @@ export default function FinanceManager() {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/finance", {
+      const res = await axios.get(`${API_BASE_URL}/api/finance`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setTransactions(res.data);
@@ -47,7 +49,7 @@ export default function FinanceManager() {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        "http://localhost:5000/api/finance",
+        `${API_BASE_URL}/api/finance`,
         { amount, type, category, note },
         { headers: { Authorization: `Bearer ${token}` } }
       );

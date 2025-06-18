@@ -4,6 +4,8 @@ import { FaPlus, FaTrash, FaCheckCircle } from "react-icons/fa";
 import Sidebar from "../components/Sidebar";
 import { useNavigate } from "react-router-dom";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE || "http://localhost:5000";
+
 export default function GoalTrackerPage() {
   const navigate = useNavigate();
   const [goals, setGoals] = useState([]);
@@ -15,7 +17,7 @@ export default function GoalTrackerPage() {
   const fetchGoals = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/goals", {
+      const res = await axios.get(`${API_BASE_URL}/api/goals`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setGoals(res.data);
@@ -29,7 +31,7 @@ export default function GoalTrackerPage() {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        "http://localhost:5000/api/goals",
+        `${API_BASE_URL}/api/goals`,
         { title: newGoal, description },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -44,7 +46,7 @@ export default function GoalTrackerPage() {
   const deleteGoal = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/goals/${id}`, {
+      await axios.delete(`${API_BASE_URL}/api/goals/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setGoals(goals.filter((goal) => goal._id !== id));
@@ -56,12 +58,16 @@ export default function GoalTrackerPage() {
   const markComplete = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      const updated = await axios.patch(
-        `http://localhost:5000/api/goals/${id}`,
-        { status: "Completed" },
+      await axios.put(
+        `${API_BASE_URL}/api/goals/${id}`,
+        { completed: true },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setGoals(goals.map((g) => (g._id === id ? updated.data : g)));
+      setGoals(
+        goals.map((goal) =>
+          goal._id === id ? { ...goal, completed: true } : goal
+        )
+      );
     } catch (err) {
       console.error("Error updating goal", err);
     }
@@ -74,7 +80,7 @@ export default function GoalTrackerPage() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:5000/api/auth/me", {
+      .get(`${API_BASE_URL}/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setUserName(res.data.name))
@@ -94,7 +100,7 @@ export default function GoalTrackerPage() {
       />
       {!sidebarOpen && (
         <button
-         className="fixed top-2 left-2 z-30 text-2xl text-blue-700 p-2 hover:text-blue-900 focus:outline-none"
+          className="fixed top-2 left-2 z-30 text-2xl text-blue-700 p-2 hover:text-blue-900 focus:outline-none"
           onClick={() => setSidebarOpen(true)}
           aria-label="Open Sidebar"
         >

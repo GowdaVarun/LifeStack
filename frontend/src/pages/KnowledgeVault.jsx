@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 
 const VAULT_TYPES = ["Article", "Video", "Tutorial", "Other"];
+const API_BASE_URL = import.meta.env.VITE_API_BASE || "http://localhost:5000";
 
 export default function KnowledgeVault() {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ export default function KnowledgeVault() {
   const fetchItems = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/vault", {
+      const res = await axios.get(`${API_BASE_URL}/api/vault`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setItems(res.data);
@@ -33,7 +34,7 @@ export default function KnowledgeVault() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:5000/api/auth/me", {
+      .get(`${API_BASE_URL}/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setUserName(res.data.name))
@@ -45,7 +46,7 @@ export default function KnowledgeVault() {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        "http://localhost:5000/api/vault",
+        `${API_BASE_URL}/api/vault`,
         { url, type, notes },
         { headers: { Authorization: `Bearer ${token}` } }
       );

@@ -5,6 +5,8 @@ import axios from "axios";
 import Sidebar from "../components/Sidebar";
 import { useNavigate } from "react-router-dom";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE || "http://localhost:5000";
+
 export default function JournalPage() {
   const navigate = useNavigate();
   const [entry, setEntry] = useState("");
@@ -16,7 +18,7 @@ export default function JournalPage() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:5000/api/auth/me", {
+      .get(`${API_BASE_URL}/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setUserName(res.data.name))
@@ -26,7 +28,7 @@ export default function JournalPage() {
   const fetchEntries = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/journal", {
+      const res = await axios.get(`${API_BASE_URL}/api/journal`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setHistory(res.data);
@@ -45,7 +47,7 @@ export default function JournalPage() {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        "http://localhost:5000/api/journal",
+        `${API_BASE_URL}/api/journal`,
         { text: entry, mood },
         { headers: { Authorization: `Bearer ${token}` } }
       );
