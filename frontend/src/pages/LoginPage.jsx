@@ -54,9 +54,13 @@ export default function Login() {
         </form>
         <p className="mt-4 text-sm text-center">
           Don't have an account?{" "}
-          <a href="/register" className="text-blue-600 hover:underline">
+          <button
+            type="button"
+            className="text-blue-600 hover:underline bg-transparent border-none p-0 m-0"
+            onClick={() => navigate("/register")}
+          >
             Register
-          </a>
+          </button>
         </p>
       </div>
     </div>
