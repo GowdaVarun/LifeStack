@@ -87,6 +87,11 @@ export default function GoalTrackerPage() {
       .catch(() => setUserName("User"));
   }, []);
 
+    useEffect(() => {
+    if (window.innerWidth < 768) setSidebarOpen(false);
+    else setSidebarOpen(true);
+  }, []);
+  
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-green-200 via-blue-100 to-yellow-200 animate-fade-in">
       <Sidebar

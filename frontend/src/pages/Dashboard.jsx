@@ -34,6 +34,11 @@ export default function Dashboard() {
     }
   }, [navigate]);
 
+  useEffect(() => {
+    if (window.innerWidth < 768) setSidebarOpen(false);
+    else setSidebarOpen(true);
+  }, []);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");

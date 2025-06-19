@@ -64,6 +64,11 @@ export default function KnowledgeVault() {
     }
   };
 
+    useEffect(() => {
+    if (window.innerWidth < 768) setSidebarOpen(false);
+    else setSidebarOpen(true);
+  }, []);
+  
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-indigo-200 via-purple-100 to-pink-200 animate-fade-in">
       <Sidebar

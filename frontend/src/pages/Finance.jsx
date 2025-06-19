@@ -81,6 +81,11 @@ export default function FinanceManager() {
       },
     ],
   };
+  
+    useEffect(() => {
+    if (window.innerWidth < 768) setSidebarOpen(false);
+    else setSidebarOpen(true);
+  }, []);
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-yellow-200 via-orange-100 to-pink-200 animate-fade-in">

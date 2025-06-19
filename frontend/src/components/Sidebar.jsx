@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import Profile from "../pages/Profile";
 
 export default function Sidebar({ userName, onLogout, onToggle, sidebarOpen }) {
   const navigate = useNavigate();
@@ -10,7 +11,6 @@ export default function Sidebar({ userName, onLogout, onToggle, sidebarOpen }) {
       }`}
       style={{ minWidth: sidebarOpen ? 256 : 0 }}
     >
-      {/* Hamburger icon for toggling sidebar */}
       <button
         className="absolute top-4 left-4 text-2xl text-blue-700 hover:text-blue-900 focus:outline-none"
         onClick={onToggle}
