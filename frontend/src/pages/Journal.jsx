@@ -13,7 +13,7 @@ export default function JournalPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [userName, setUserName] = useState("");
   const [eventType, setEventType] = useState("");
-  const [events, setEvents] = useState([]); // {type, text, time}
+  const [events, setEvents] = useState([{ type: "", text: "", time: "" }]); // {type, text, time}
   const [filter, setFilter] = useState("all");
 
   useEffect(() => {
@@ -64,11 +64,11 @@ export default function JournalPage() {
   const handlePDFExport = () => {
     const doc = new jsPDF();
     let y = 10;
-    history.forEach((e,i) => {
+    history.forEach((e, i) => {
       doc.text(
-        `Date: ${formatIST(e.date)}\nEvent Type: ${e.mood}\nTime: ${e.time || "-"}\n${
-          e.text
-        }\n`,
+        `Date: ${formatIST(e.date)}\nEvent Type: ${e.mood}\nTime: ${
+          e.time || "-"
+        }\n${e.text}\n`,
         10,
         y
       );
@@ -172,11 +172,13 @@ export default function JournalPage() {
             ← Back to Dashboard
           </button>
         </div>
-        <div className="mb-6"> 
+        <div className="mb-6">
           <h1 className="text-3xl font-extrabold text-blue-700 text-center flex-1">
             Daily Events
           </h1>
-          <p className="mt-6 text-2xl font-serif text-blue-900 text-center flex-1">Select event type to add event</p>
+          <p className="mt-6 text-2xl font-serif text-blue-900 text-center flex-1">
+            Select event type to add event
+          </p>
         </div>
         <div className="flex gap-4 mb-6 justify-center flex-wrap">
           <button
@@ -219,7 +221,6 @@ export default function JournalPage() {
             <FaMeh className="inline mr-2" /> Neutral
           </button>
         </div>
-        {/* Event Inputs */}
         {eventType && (
           <div className="mb-6 flex flex-col items-center gap-4">
             {events.map((e, idx) => (
@@ -227,8 +228,14 @@ export default function JournalPage() {
                 key={idx}
                 className="flex flex-col md:flex-row gap-2 w-full max-w-xl items-center"
               >
-                <input
-                  className="flex-1 px-4 py-2 border-2 border-blue-200 rounded-lg focus:outline-none focus:border-blue-500 bg-white/80 shadow"
+                <textarea
+                  className="flex-1 px-4 py-2 border-2 border-blue-200 rounded-lg focus:outline-none focus:border-blue-500 bg-white/80 shadow h-20 text-base resize-none overflow-y-auto"
+                  style={{
+                    minHeight: "80px",
+                    maxHeight: "200px",
+                    width: "100%",
+                    overflowX: "hidden",
+                  }}
                   placeholder={`Describe your ${eventType} event...`}
                   value={e.text}
                   onChange={(ev) =>
@@ -254,15 +261,47 @@ export default function JournalPage() {
                 + Add Event
               </button>
             </div>
-              <div className="flex gap-2 ">
-                <button
+            <div className="flex gap-2 ">
+              <button
                 className="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition font-bold"
                 onClick={handleSaveAll}
                 type="button"
-                >
+              >
                 Save Events
               </button>
+            </div>
+          </div>
+        )}
+        {!eventType && events.length > 0 && (
+          <div className="mb-6 flex flex-col items-center gap-4">
+            {events.map((e, idx) => (
+              <div
+                key={idx}
+                className="flex flex-col md:flex-row gap-2 w-full max-w-xl items-center"
+              >
+                <textarea
+                  className="flex-1 px-4 py-2 border-2 border-blue-200 rounded-lg focus:outline-none focus:border-blue-500 bg-white/80 shadow h-20 text-base resize-none overflow-y-auto"
+                  style={{
+                    minHeight: "80px",
+                    maxHeight: "200px",
+                    width: "100%",
+                    overflowX: "hidden",
+                  }}
+                  placeholder="Select an event type above to begin..."
+                  value={e.text}
+                  onChange={(ev) =>
+                    handleEventChange(idx, ev.target.value, "text")
+                  }
+                  disabled
+                />
+                <input
+                  type="time"
+                  className="w-32 px-2 py-2 border-2 border-blue-200 rounded-lg focus:outline-none focus:border-blue-500 bg-white/80 shadow"
+                  value={e.time || ""}
+                  disabled
+                />
               </div>
+            ))}
           </div>
         )}
         {/* Cumulative Report */}
@@ -288,11 +327,11 @@ export default function JournalPage() {
         </div>
         <div className="mb-4 flex justify-center">
           <button
-                className="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition w-fit"
-                onClick={handlePDFExport}
-              >
-                Export PDF
-              </button>
+            className="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition w-fit"
+            onClick={handlePDFExport}
+          >
+            Export PDF
+          </button>
         </div>
         {/* Filter and List */}
         <div className="flex justify-between items-center mb-4 max-w-xl mx-auto">
