@@ -3,15 +3,15 @@ import { Code } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 const cards = [
   {
-    title: "Journaling",
+    title: "Daily Events",
     icon: "📝",
-    desc: "Track your journal entries, reflect and grow each day.",
+    desc: "Track your daily events, reflect and grow each day.",
     color: "from-pink-400 to-yellow-300",
   },
   {
-    title: "Goals",
+    title: "Tasks",
     icon: "🎯",
-    desc: "Set SMART goals and stay focused on your dreams.",
+    desc: "Set SMART  and stay focused on your dreams.",
     color: "from-green-400 to-blue-400",
   },
   {

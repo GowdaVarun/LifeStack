@@ -68,15 +68,15 @@ export default function Dashboard() {
           sidebarOpen ? "ml-64" : "ml-0"
         } w-full min-h-screen pt-10 px-10`}
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mt-24">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-24">
           <DashboardCard
-            title="Journal"
+            title="Daily Events"
             route="/journal"
             icon="📝"
             color="from-pink-400 to-yellow-300"
           />
           <DashboardCard
-            title="Goals"
+            title="Tasks"
             route="/goals"
             icon="🎯"
             color="from-green-400 to-blue-400"
