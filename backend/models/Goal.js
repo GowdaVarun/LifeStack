@@ -4,7 +4,7 @@ const goalSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
     deadline: { type: Date, required: true },
-    status: { type: String, default: "Pending" }, // "Pending", "Completed", "Missed"
+    status: { type: String, default: "Pending" },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   },
   { timestamps: true }

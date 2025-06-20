@@ -8,7 +8,7 @@ export default function Sidebar({ userName, onLogout, onToggle, sidebarOpen }) {
     <aside
       className={`fixed left-0 top-0 h-screen z-30 flex flex-col items-center py-8 transition-all duration-500 ${
         sidebarOpen ? "w-64" : "w-0 overflow-hidden"
-      }`}
+      } bg-white/30 backdrop-blur-md shadow-lg`}
       style={{ minWidth: sidebarOpen ? 256 : 0 }}
     >
       <button
@@ -16,7 +16,7 @@ export default function Sidebar({ userName, onLogout, onToggle, sidebarOpen }) {
         onClick={onToggle}
         aria-label="Toggle Sidebar"
       >
-        ☰
+        X
       </button>
       <button
         className="mt-5 mb-10 text-3xl font-extrabold text-blue-700 tracking-widest drop-shadow-lg hover:scale-105 transition-transform"

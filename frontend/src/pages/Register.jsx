@@ -47,22 +47,22 @@ export default function Register() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 transition-all">
       <Toast message={toast} onClose={() => setToast("")} />
-      <div className="bg-white/90 p-10 rounded-3xl shadow-2xl w-full max-w-md flex flex-col items-center border border-blue-100">
+      <div className="bg-white/90 p-6 md:p-10 rounded-2xl md:rounded-3xl shadow-2xl w-full max-w-xs md:max-w-md flex flex-col items-center border border-blue-100">
         <button
-          className="self-start flex items-center px-4 py-2 rounded-lg border border-blue-200 bg-white text-blue-700 font-semibold hover:bg-blue-50 transition mb-4"
+          className="self-start flex items-center px-3 py-2 md:px-4 md:py-2 rounded-lg border border-blue-200 bg-white text-blue-700 font-semibold hover:bg-blue-50 transition mb-3 md:mb-4 text-sm md:text-base"
           onClick={() => navigate("/login")}
         >
           ← Back
         </button>
-        <h2 className="text-3xl font-extrabold mb-6 text-blue-700 drop-shadow text-center">
+        <h2 className="text-2xl md:text-3xl font-extrabold mb-4 md:mb-6 text-blue-700 drop-shadow text-center">
           Create LifeStack Account
         </h2>
-        <form onSubmit={handleSubmit} className="space-y-4 w-full">
+        <form onSubmit={handleSubmit} className="space-y-3 md:space-y-4 w-full">
           <input
             type="text"
             name="name"
             placeholder="Name"
-            className="w-full px-4 py-3 border-2 border-blue-200 rounded-lg focus:outline-none focus:border-blue-500 bg-white/80 shadow"
+            className="w-full px-3 py-2 md:px-4 md:py-3 border-2 border-blue-200 rounded-lg focus:outline-none focus:border-blue-500 bg-white/80 shadow text-sm md:text-base"
             value={formData.name}
             onChange={handleChange}
             required
@@ -71,7 +71,7 @@ export default function Register() {
             type="email"
             name="email"
             placeholder="Email"
-            className="w-full px-4 py-3 border-2 border-blue-200 rounded-lg focus:outline-none focus:border-blue-500 bg-white/80 shadow"
+            className="w-full px-3 py-2 md:px-4 md:py-3 border-2 border-blue-200 rounded-lg focus:outline-none focus:border-blue-500 bg-white/80 shadow text-sm md:text-base"
             value={formData.email}
             onChange={handleChange}
             required
@@ -80,19 +80,19 @@ export default function Register() {
             type="password"
             name="password"
             placeholder="Password"
-            className="w-full px-4 py-3 border-2 border-blue-200 rounded-lg focus:outline-none focus:border-blue-500 bg-white/80 shadow"
+            className="w-full px-3 py-2 md:px-4 md:py-3 border-2 border-blue-200 rounded-lg focus:outline-none focus:border-blue-500 bg-white/80 shadow text-sm md:text-base"
             value={formData.password}
             onChange={handleChange}
             required
           />
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-lg shadow hover:from-blue-600 hover:to-purple-600 transition font-bold"
+            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-2 md:py-3 rounded-lg shadow hover:from-blue-600 hover:to-purple-600 transition font-bold text-sm md:text-base"
           >
             Register
           </button>
         </form>
-        <p className="mt-6 text-sm text-center">
+        <p className="mt-4 md:mt-6 text-xs md:text-sm text-center">
           Already have an account?{" "}
           <button
             type="button"

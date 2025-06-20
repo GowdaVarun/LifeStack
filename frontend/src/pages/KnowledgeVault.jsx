@@ -64,9 +64,8 @@ export default function KnowledgeVault() {
     }
   };
 
-    useEffect(() => {
-    if (window.innerWidth < 768) setSidebarOpen(false);
-    else setSidebarOpen(true);
+ useEffect(() => {
+    setSidebarOpen(false);
   }, []);
   
   return (
@@ -90,9 +89,7 @@ export default function KnowledgeVault() {
         </button>
       )}
       <div
-        className={`transition-all duration-500 ${
-          sidebarOpen ? "ml-64" : "ml-0"
-        } w-full min-h-screen pt-10 px-10`}
+        className={`transition-all duration-500 w-full min-h-screen pt-10 px-2 md:px-10`}
       >
         <button
           className="mb-6 mt-4 bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"

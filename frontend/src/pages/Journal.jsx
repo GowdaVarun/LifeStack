@@ -90,9 +90,8 @@ export default function JournalPage() {
     });
   };
 
-  useEffect(() => {
-    if (window.innerWidth < 768) setSidebarOpen(false);
-    else setSidebarOpen(true);
+ useEffect(() => {
+    setSidebarOpen(false);
   }, []);
 
   // Cumulative counts
@@ -160,11 +159,9 @@ export default function JournalPage() {
         </button>
       )}
       <div
-        className={`transition-all duration-500 ${
-          sidebarOpen ? "ml-64" : "ml-0"
-        } w-full min-h-screen pt-10 px-2 md:px-10`}
+        className={`transition-all duration-500 w-full min-h-screen pt-10 px-2 md:px-10`}
       >
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+        <div className="mt-4 flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
           <button
             className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition w-fit"
             onClick={() => navigate("/dashboard")}
@@ -358,7 +355,7 @@ export default function JournalPage() {
             .map((e, idx) => (
               <div
                 key={e._id || idx}
-                className={`p-4 rounded-xl shadow flex flex-col md:flex-row md:items-center gap-2 bg-white/80 border-l-8 ${
+                className={`mb-2 p-4 rounded-xl shadow flex flex-col md:flex-row md:items-center gap-2 bg-white/80 border-l-8 ${
                   e.mood === "good"
                     ? "border-green-400"
                     : e.mood === "bad"

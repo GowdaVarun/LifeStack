@@ -13,17 +13,19 @@ router.post("/", authMiddleware, async (req, res) => {
         .status(400)
         .json({ message: "Title and deadline are required" });
     }
-    // Ensure deadline is a Date object
+
     const deadlineDate = new Date(deadline);
     if (isNaN(deadlineDate.getTime())) {
       return res.status(400).json({ message: "Invalid deadline format" });
     }
+
     const goal = await Goal.create({
       title,
       deadline: deadlineDate,
       status: "Pending",
       user: req.user.id,
     });
+
     res.json(goal);
   } catch (err) {
     res.status(500).json({ message: "Error creating task" });

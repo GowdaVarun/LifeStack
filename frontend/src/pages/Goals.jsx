@@ -10,7 +10,8 @@ export default function TodoListPage() {
   const navigate = useNavigate();
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
-  const [deadline, setDeadline] = useState("");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [userName, setUserName] = useState("");
   const [filter, setFilter] = useState("all");
@@ -41,15 +42,16 @@ export default function TodoListPage() {
     fetchTasks();
   }, []);
 
-  useEffect(() => {
-    if (window.innerWidth < 768) setSidebarOpen(false);
-    else setSidebarOpen(true);
+ useEffect(() => {
+    setSidebarOpen(false);
   }, []);
 
   const addTask = async () => {
-    if (!title || !deadline) return;
+    if (!title || !date || !time) return;
     try {
       const token = localStorage.getItem("token");
+      // Combine date and time as a string ("YYYY-MM-DDTHH:mm")
+      const deadline = `${date}T${time}`;
       const res = await axios.post(
         `${API_BASE_URL}/api/goals`,
         { title, deadline },
@@ -57,7 +59,8 @@ export default function TodoListPage() {
       );
       setTasks([res.data, ...tasks]);
       setTitle("");
-      setDeadline("");
+      setDate("");
+      setTime("");
     } catch (err) {
       console.error("Error adding task", err);
     }
@@ -89,7 +92,6 @@ export default function TodoListPage() {
     }
   };
 
-  // Status logic
   const getStatus = (task) => {
     if (task.status === "Completed") return "Completed";
     if (task.deadline && new Date(task.deadline) < new Date()) return "Missed";
@@ -101,6 +103,19 @@ export default function TodoListPage() {
     if (filter === "all") return true;
     return status === filter;
   });
+
+  // Helper to format date/time in IST (same as Journal.jsx)
+  const formatIST = (dateStr) => {
+    const date = new Date(dateStr);
+    return date.toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-green-200 via-blue-100 to-yellow-200 animate-fade-in">
@@ -123,9 +138,7 @@ export default function TodoListPage() {
         </button>
       )}
       <div
-        className={`transition-all duration-500 ${
-          sidebarOpen ? "ml-64" : "ml-0"
-        } w-full min-h-screen pt-10 px-2 md:px-10`}
+        className={`transition-all duration-500 w-full min-h-screen pt-10 px-2 md:px-10`}
       >
         <button
           className="mb-6 mt-4 bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
@@ -134,7 +147,7 @@ export default function TodoListPage() {
           ← Back to Dashboard
         </button>
         <h2 className="text-3xl font-bold mb-6 text-blue-700 text-center">
-          📝 To-Do List
+          📝 Tasks
         </h2>
         <div className="flex flex-col md:flex-row gap-4 mb-6 items-center justify-center">
           <input
@@ -146,27 +159,14 @@ export default function TodoListPage() {
           />
           <input
             type="date"
-            value={deadline.split("T")[0] || ""}
-            onChange={(e) => {
-              const d = e.target.value;
-              setDeadline((prev) => {
-                const t = prev.split("T")[1] || "00:00";
-                return d ? `${d}T${t}` : "";
-              });
-            }}
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
             className="px-4 py-2 border rounded shadow"
           />
           <input
             type="time"
-            value={deadline.split("T")[1] || ""}
-            onChange={(e) => {
-              const t = e.target.value;
-              setDeadline((prev) => {
-                const d =
-                  prev.split("T")[0] || new Date().toISOString().split("T")[0];
-                return t ? `${d}T${t}` : `${d}T00:00`;
-              });
-            }}
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
             className="px-4 py-2 border rounded shadow"
           />
           <button
@@ -177,46 +177,41 @@ export default function TodoListPage() {
           </button>
         </div>
         <div className="flex justify-center gap-4 mb-6">
-          <button
-            className={`px-4 py-2 rounded-full font-bold shadow transition-all ${
-              filter === "all"
-                ? "bg-blue-600 text-white"
-                : "bg-white text-blue-700 border border-blue-300"
-            }`}
-            onClick={() => setFilter("all")}
-          >
-            All
-          </button>
-          <button
-            className={`px-4 py-2 rounded-full font-bold shadow transition-all ${
-              filter === "Pending"
-                ? "bg-yellow-500 text-white"
-                : "bg-white text-yellow-700 border border-yellow-300"
-            }`}
-            onClick={() => setFilter("Pending")}
-          >
-            Pending
-          </button>
-          <button
-            className={`px-4 py-2 rounded-full font-bold shadow transition-all ${
-              filter === "Completed"
-                ? "bg-green-600 text-white"
-                : "bg-white text-green-700 border border-green-300"
-            }`}
-            onClick={() => setFilter("Completed")}
-          >
-            Completed
-          </button>
-          <button
-            className={`px-4 py-2 rounded-full font-bold shadow transition-all ${
-              filter === "Missed"
-                ? "bg-red-600 text-white"
-                : "bg-white text-red-700 border border-red-300"
-            }`}
-            onClick={() => setFilter("Missed")}
-          >
-            Missed
-          </button>
+          {["all", "Pending", "Completed", "Missed"].map((f) => (
+            <button
+              key={f}
+              className={`px-4 py-2 rounded-full font-bold shadow transition-all ${
+                filter === f
+                  ? f === "Completed"
+                    ? "bg-green-600 text-white"
+                    : f === "Missed"
+                    ? "bg-red-600 text-white"
+                    : f === "Pending"
+                    ? "bg-yellow-500 text-white"
+                    : "bg-blue-600 text-white"
+                  : `bg-white text-${
+                      f === "Completed"
+                        ? "green"
+                        : f === "Missed"
+                        ? "red"
+                        : f === "Pending"
+                        ? "yellow"
+                        : "blue"
+                    }-700 border border-${
+                      f === "Completed"
+                        ? "green"
+                        : f === "Missed"
+                        ? "red"
+                        : f === "Pending"
+                        ? "yellow"
+                        : "blue"
+                    }-300`
+              }`}
+              onClick={() => setFilter(f)}
+            >
+              {f}
+            </button>
+          ))}
         </div>
         <div className="space-y-4 max-w-2xl mx-auto">
           {filteredTasks.length === 0 && (
@@ -226,60 +221,60 @@ export default function TodoListPage() {
             const status = getStatus(task);
             return (
               <div
-              key={task._id}
-              className={`flex flex-col md:flex-row items-center justify-between bg-white rounded-xl p-4 shadow border-l-8 ${
-                status === "Completed"
-                ? "border-green-400"
-                : status === "Missed"
-                ? "border-red-400"
-                : "border-yellow-400"
-              }`}
-              >
-              <div className="flex-1 flex flex-col md:flex-row md:items-center gap-2">
-                <span className="font-bold text-lg text-blue-700">
-                {task.title}
-                </span>
-                <span className="text-sm text-gray-500 ml-2">
-                Due:{" "}
-                {task.deadline
-                  ? (() => {
-                    const d = new Date(task.deadline);
-                    if (isNaN(d)) return "-";
-                    const date = d.toLocaleDateString();
-                    const time = d
-                    .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-                    return `${date} ${time}`;
-                  })()
-                  : "-"}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 mt-2 md:mt-0">
-                <span
-                className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                key={task._id}
+                className={`flex flex-col md:flex-row bg-white rounded-xl p-4 shadow border-l-8 mb-2 ${
                   status === "Completed"
-                  ? "bg-green-100 text-green-700"
-                  : status === "Missed"
-                  ? "bg-red-100 text-red-700"
-                  : "bg-yellow-100 text-yellow-700"
+                    ? "border-green-400"
+                    : status === "Missed"
+                    ? "border-red-400"
+                    : "border-yellow-400"
                 }`}
-                >
-                {status}
-                </span>
-                {status !== "Completed" && (
-                <button
-                  onClick={() => markComplete(task._id)}
-                  className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 shadow flex items-center"
-                >
-                  <FaCheck className="mr-1" /> Complete
-                </button>
-                )}
-                <button
-                onClick={() => deleteTask(task._id)}
-                className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 shadow flex items-center"
-                >
-                <FaTrash className="mr-1" /> Delete
-                </button>
-              </div>
+              >
+                <div className="flex flex-col flex-1 gap-2">
+                  <div className="flex flex-row items-center justify-between">
+                    <span className="font-bold text-lg text-blue-700">
+                      {task.title}
+                    </span>
+                    <span
+                      className={`px-3 py-1 text-xs font-semibold rounded-full ml-2 ${
+                        status === "Completed"
+                          ? "bg-green-100 text-green-700"
+                          : status === "Missed"
+                          ? "bg-red-100 text-red-700"
+                          : "bg-yellow-100 text-yellow-700"
+                      }`}
+                    >
+                      {status}
+                    </span>
+                  </div>
+                  <div className="flex flex-row items-center justify-between mt-1">
+                    <span className="text-sm text-gray-500">
+                      Due:{" "}
+                      <span className="font-semibold">
+                        {formatIST(task.deadline).split(",")[0]}
+                      </span>{" "}
+                      {/* <span>
+                        {formatIST(task.deadline).split(",")[1]?.trim()}
+                      </span> */}
+                    </span>
+                    <div className="flex flex-row gap-2">
+                      {status !== "Completed" && (
+                        <button
+                          onClick={() => markComplete(task._id)}
+                          className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 shadow flex items-center"
+                        >
+                          <FaCheck className="mr-1" /> Complete
+                        </button>
+                      )}
+                      <button
+                        onClick={() => deleteTask(task._id)}
+                        className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 shadow flex items-center"
+                      >
+                        <FaTrash className="mr-1" /> Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             );
           })}

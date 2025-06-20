@@ -35,8 +35,7 @@ export default function Dashboard() {
   }, [navigate]);
 
   useEffect(() => {
-    if (window.innerWidth < 768) setSidebarOpen(false);
-    else setSidebarOpen(true);
+    setSidebarOpen(false);
   }, []);
 
   const handleLogout = () => {
@@ -64,9 +63,7 @@ export default function Dashboard() {
         </button>
       )}
       <div
-        className={`transition-all duration-500 ${
-          sidebarOpen ? "ml-64" : "ml-0"
-        } w-full min-h-screen pt-10 px-10`}
+        className={`transition-all duration-500 w-full min-h-screen pt-10 px-10`}
       >
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-24">
           <DashboardCard
